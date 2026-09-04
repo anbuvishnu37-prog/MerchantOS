@@ -43,6 +43,10 @@ def can_transition(
     new_state: PaymentState
 ) -> bool:
 
+    # Same-state transition is idempotent.
+    if current_state == new_state:
+        return True
+
     return new_state in ALLOWED_TRANSITIONS.get(
         current_state,
         []

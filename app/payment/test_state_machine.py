@@ -1,50 +1,43 @@
-from app.payment.state_machine import (
-    PaymentState,
-    transition
-)
+from app.payment.state_machine import PaymentState, can_transition, transition
 
 
-print("Test 1: NOT_STARTED → INITIATED")
-
-result = transition(
-    PaymentState.NOT_STARTED,
-    PaymentState.INITIATED
-)
-
-print("Result:", result)
-
-
-print("\nTest 2: INITIATED → PAID")
-
-result = transition(
-    PaymentState.INITIATED,
-    PaymentState.PAID
-)
-
-print("Result:", result)
-
-
-print("\nTest 3: INITIATED → UNKNOWN")
-
-result = transition(
-    PaymentState.INITIATED,
-    PaymentState.UNKNOWN
-)
-
-print("Result:", result)
-
-
-print("\nTest 4: PAID → INITIATED")
-
-try:
-
-    result = transition(
-        PaymentState.PAID,
+def test_not_started_to_initiated():
+    assert can_transition(
+        PaymentState.NOT_STARTED,
         PaymentState.INITIATED
     )
 
-    print("Result:", result)
 
-except ValueError as error:
+def test_initiated_to_paid():
+    assert can_transition(
+        PaymentState.INITIATED,
+        PaymentState.PAID
+    )
 
-    print("Correctly rejected:", error)
+
+def test_initiated_to_failed():
+    assert can_transition(
+        PaymentState.INITIATED,
+        PaymentState.FAILED
+    )
+
+
+def test_initiated_to_unknown():
+    assert can_transition(
+        PaymentState.INITIATED,
+        PaymentState.UNKNOWN
+    )
+
+
+def test_paid_cannot_transition():
+    assert not can_transition(
+        PaymentState.PAID,
+        PaymentState.FAILED
+    )
+
+
+def test_transition_returns_new_state():
+    assert transition(
+        PaymentState.INITIATED,
+        PaymentState.PAID
+    ) == PaymentState.PAID

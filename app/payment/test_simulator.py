@@ -1,27 +1,25 @@
 from app.payment.simulator import simulate_payment
+from app.payment.state_machine import PaymentState
 
 
-print("================================")
-print("MerchantOS Payment Simulator")
-print("================================")
+def test_simulator_success():
+    result = simulate_payment("success")
+    assert result == PaymentState.PAID
 
 
-print("\nTEST 1: SUCCESS")
-
-result = simulate_payment("success")
-
-print("Final state:", result)
+def test_simulator_failure():
+    result = simulate_payment("failure")
+    assert result == PaymentState.FAILED
 
 
-print("\nTEST 2: FAILURE")
-
-result = simulate_payment("failure")
-
-print("Final state:", result)
+def test_simulator_timeout():
+    result = simulate_payment("timeout")
+    assert result == PaymentState.UNKNOWN
 
 
-print("\nTEST 3: NETWORK TIMEOUT")
-
-result = simulate_payment("timeout")
-
-print("Final state:", result)
+def test_simulator_invalid_scenario():
+    try:
+        simulate_payment("invalid")
+        assert False
+    except ValueError:
+        assert True

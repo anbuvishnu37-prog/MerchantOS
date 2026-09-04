@@ -2,46 +2,44 @@ from app.payment.state_machine import PaymentState
 from app.payment.recovery import recover_payment
 
 
-print("================================")
-print("MerchantOS Recovery Engine")
-print("================================")
+def test_recovery_paid():
+    result = recover_payment(
+        PaymentState.INITIATED,
+        "paid"
+    )
+    assert result == PaymentState.PAID
 
 
-print("\nTEST 1: UNKNOWN → PAID")
-
-result = recover_payment(
-    PaymentState.UNKNOWN,
-    "paid"
-)
-
-print("Recovered state:", result)
+def test_recovery_failed():
+    result = recover_payment(
+        PaymentState.INITIATED,
+        "failed"
+    )
+    assert result == PaymentState.FAILED
 
 
-print("\nTEST 2: UNKNOWN → FAILED")
-
-result = recover_payment(
-    PaymentState.UNKNOWN,
-    "failed"
-)
-
-print("Recovered state:", result)
+def test_recovery_not_found():
+    result = recover_payment(
+        PaymentState.INITIATED,
+        "not_found"
+    )
+    assert result == PaymentState.INITIATED
 
 
-print("\nTEST 3: UNKNOWN → SAFE RETRY")
-
-result = recover_payment(
-    PaymentState.UNKNOWN,
-    "not_found"
-)
-
-print("Recovered state:", result)
+def test_recovery_unknown():
+    result = recover_payment(
+        PaymentState.INITIATED,
+        "unknown"
+    )
+    assert result == PaymentState.UNKNOWN
 
 
-print("\nTEST 4: UNKNOWN → UNKNOWN")
-
-result = recover_payment(
-    PaymentState.UNKNOWN,
-    "unknown"
-)
-
-print("Recovered state:", result)
+def test_recovery_invalid_status():
+    try:
+        recover_payment(
+            PaymentState.INITIATED,
+            "invalid"
+        )
+        assert False
+    except ValueError:
+        assert True
