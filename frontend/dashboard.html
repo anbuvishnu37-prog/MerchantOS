@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MerchantOS Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 230px;
+            height: 100vh;
+            background: #111827;
+            color: white;
+            padding: 28px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 40px;
+        }
+
+        .nav-item {
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            color: #d1d5db;
+        }
+
+        .nav-item.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .main {
+            margin-left: 230px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .topbar h1 {
+            font-size: 28px;
+        }
+
+        .status {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 9px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .card-title {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .blue {
+            color: #2563eb;
+        }
+
+        .green {
+            color: #16a34a;
+        }
+
+        .purple {
+            color: #7c3aed;
+        }
+
+        .orange {
+            color: #ea580c;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 22px;
+            margin-bottom: 22px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .panel h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .order-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .order-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 18px;
+            min-height: 150px;
+        }
+
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .order-row:last-child {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .paid {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .pending {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .initiated {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .failed {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .audit {
+            max-height: 330px;
+            overflow-y: auto;
+        }
+
+        .audit-item {
+            border-left: 3px solid #2563eb;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .audit-action {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .audit-meta {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .systems {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .system {
+            padding: 20px;
+            border-radius: 14px;
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .system-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .system-name {
+            font-weight: 800;
+        }
+
+        .online {
+            color: #16a34a;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .system-description {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .message {
+            color: #6b7280;
+            text-align: center;
+            padding: 30px;
+        }
+
+        @media(max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .cards,
+            .systems {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">MerchantOS</div>
+
+    <div class="subtitle">
+        AI-Native Merchant Platform
+    </div>
+
+    <div class="nav-item active">
+        📊 Dashboard
+    </div>
+
+    <div class="nav-item">
+        📦 Orders
+    </div>
+
+    <div class="nav-item">
+        💳 Payments
+    </div>
+
+    <div class="nav-item">
+        🤖 AI Agent
+    </div>
+
+    <div class="nav-item">
+        🛡️ Guardrails
+    </div>
+
+    <div class="nav-item">
+        📋 Audit
+    </div>
+
+</div>
+
+
+<div class="main">
+
+    <div class="topbar">
+
+        <div>
+            <h1>Merchant Operations</h1>
+            <p style="color:#6b7280; margin-top:5px;">
+                Real-time commerce control center
+            </p>
+        </div>
+
+        <div class="status">
+            ● SYSTEM OPERATIONAL
+        </div>
+
+    </div>
+
+
+    <!-- STAT CARDS -->
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="card-title">ORDERS PROCESSED</div>
+            <div class="card-value blue" id="orderCount">--</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">TOTAL TRANSACTIONS</div>
+            <div class="card-value green" id="transactionCount">--</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">AI EVENTS</div>
+            <div class="card-value purple" id="aiCount">--</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">AUDIT EVENTS</div>
+            <div class="card-value orange" id="auditCount">--</div>
+        </div>
+
+    </div>
+
+
+    <div class="grid">
+
+        <!-- ORDER MONITOR -->
+
+        <div class="panel">
+
+            <h2>📦 Order Monitor</h2>
+
+            <div class="order-search">
+
+                <input
+                    id="orderId"
+                    type="number"
+                    placeholder="Enter Order ID"
+                >
+
+                <button onclick="loadOrder()">
+                    Inspect
+                </button>
+
+            </div>
+
+            <div class="order-box" id="orderBox">
+
+                <div class="message">
+                    Enter an order ID to inspect the live order.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PAYMENT MONITOR -->
+
+        <div class="panel">
+
+            <h2>💳 Payment Intelligence</h2>
+
+            <div class="order-box">
+
+                <div class="order-row">
+                    <span>Payment Gateway</span>
+                    <strong>Razorpay</strong>
+                </div>
+
+                <div class="order-row">
+                    <span>Payment Flow</span>
+                    <span class="badge initiated">
+                        INITIATE → VERIFY
+                    </span>
+                </div>
+
+                <div class="order-row">
+                    <span>Recovery Engine</span>
+                    <span class="badge paid">
+                        ACTIVE
+                    </span>
+                </div>
+
+                <div class="order-row">
+                    <span>Idempotency</span>
+                    <span class="badge paid">
+                        ENABLED
+                    </span>
+                </div>
+
+                <div class="order-row">
+                    <span>State Machine</span>
+                    <span class="badge paid">
+                        ACTIVE
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- AUDIT -->
+
+    <div class="panel" style="margin-bottom:22px;">
+
+        <h2>📋 Live Audit Trail</h2>
+
+        <div class="audit" id="auditBox">
+
+            <div class="message">
+                Loading audit events...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SYSTEM COMPONENTS -->
+
+    <div class="systems">
+
+        <div class="system">
+
+            <div class="system-header">
+                <span class="system-name">🤖 AI Agent</span>
+                <span class="online">● ONLINE</span>
+            </div>
+
+            <div class="system-description">
+                Natural-language order understanding and
+                merchant action execution.
+            </div>
+
+        </div>
+
+
+        <div class="system">
+
+            <div class="system-header">
+                <span class="system-name">🛡️ Guardrails</span>
+                <span class="online">● ACTIVE</span>
+            </div>
+
+            <div class="system-description">
+                Product and order validation before
+                transactional execution.
+            </div>
+
+        </div>
+
+
+        <div class="system">
+
+            <div class="system-header">
+                <span class="system-name">🔄 Recovery</span>
+                <span class="online">● READY</span>
+            </div>
+
+            <div class="system-description">
+                Handles uncertain payment outcomes and
+                prevents inconsistent payment states.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const API = "http://127.0.0.1:8000";
+
+
+async function loadOrder() {
+
+    const id = document.getElementById("orderId").value;
+
+    if (!id) {
+        alert("Enter an Order ID");
+        return;
+    }
+
+    const box = document.getElementById("orderBox");
+
+    box.innerHTML = "<div class='message'>Loading order...</div>";
+
+    try {
+
+        const response = await fetch(`${API}/orders/${id}`);
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            box.innerHTML =
+                `<div class="message">${data.detail}</div>`;
+            return;
+        }
+
+        const status = data.order_status;
+
+        let badgeClass = "pending";
+
+        if (status === "PAID") {
+            badgeClass = "paid";
+        }
+
+        if (status === "INITIATED") {
+            badgeClass = "initiated";
+        }
+
+        if (status === "FAILED") {
+            badgeClass = "failed";
+        }
+
+        box.innerHTML = `
+
+            <div class="order-row">
+                <span>Order ID</span>
+                <strong>#${data.order_id}</strong>
+            </div>
+
+            <div class="order-row">
+                <span>Product ID</span>
+                <strong>${data.product_id}</strong>
+            </div>
+
+            <div class="order-row">
+                <span>Quantity</span>
+                <strong>${data.quantity}</strong>
+            </div>
+
+            <div class="order-row">
+                <span>Total Amount</span>
+                <strong>₹${data.total_amount}</strong>
+            </div>
+
+            <div class="order-row">
+                <span>Order Status</span>
+                <span class="badge ${badgeClass}">
+                    ${status}
+                </span>
+            </div>
+
+            <div class="order-row">
+                <span>Payment Status</span>
+                <span class="badge ${data.payment.status === "PAID" ? "paid" : "pending"}">
+                    ${data.payment.status}
+                </span>
+            </div>
+
+            <div class="order-row">
+                <span>Payment Attempts</span>
+                <strong>${data.payment.attempts}</strong>
+            </div>
+
+            <div class="order-row">
+                <span>Razorpay Order</span>
+                <strong>${data.payment.razorpay_order_id || "—"}</strong>
+            </div>
+        `;
+
+    } catch (error) {
+
+        box.innerHTML =
+            `<div class="message">
+                Cannot connect to MerchantOS API.
+            </div>`;
+
+    }
+}
+
+
+async function loadAudit() {
+
+    try {
+
+        const response = await fetch(`${API}/audit/logs`);
+
+        const logs = await response.json();
+
+        document.getElementById("auditCount").innerText =
+            logs.length;
+
+        document.getElementById("transactionCount").innerText =
+            logs.filter(x =>
+                x.event_type &&
+                x.event_type.toLowerCase().includes("payment")
+            ).length;
+
+        document.getElementById("aiCount").innerText =
+            logs.filter(x =>
+                x.actor_type &&
+                x.actor_type.toLowerCase().includes("ai")
+            ).length;
+
+
+        const box = document.getElementById("auditBox");
+
+        if (!logs.length) {
+
+            box.innerHTML =
+                `<div class="message">
+                    No audit events available yet.
+                </div>`;
+
+            document.getElementById("orderCount").innerText = "0";
+
+            return;
+        }
+
+
+        document.getElementById("orderCount").innerText =
+            new Set(
+                logs
+                    .filter(x => x.idempotency_key)
+                    .map(x => x.idempotency_key)
+            ).size;
+
+
+        box.innerHTML = logs
+            .slice(0, 12)
+            .map(log => `
+
+                <div class="audit-item">
+
+                    <div class="audit-action">
+                        ${log.action || log.event_type}
+                    </div>
+
+                    <div class="audit-meta">
+
+                        Actor:
+                        ${log.actor_type || "system"}
+
+                        &nbsp; • &nbsp;
+
+                        Status:
+                        ${log.status || "UNKNOWN"}
+
+                        ${log.amount
+                            ? `&nbsp; • &nbsp; Amount: ₹${log.amount}`
+                            : ""}
+
+                    </div>
+
+                </div>
+
+            `)
+            .join("");
+
+    }
+
+    catch (error) {
+
+        document.getElementById("auditBox").innerHTML =
+            `<div class="message">
+                Audit service unavailable.
+            </div>`;
+
+    }
+}
+
+
+loadAudit();
+
+setInterval(loadAudit, 5000);
+
+</script>
+
+</body>
+</html>
