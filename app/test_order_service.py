@@ -1,26 +1,28 @@
 from app.database import SessionLocal
 from app.order_service import create_order_service
+import uuid
 
 
-db = SessionLocal()
+def test_create_order_service():
 
-try:
+    db = SessionLocal()
 
-    result = create_order_service(
-        product_id=2,
-        quantity=1,
-        idempotency_key="ai-service-test-001",
-        db=db
-    )
+    try:
 
-    order = result["order"]
+        result = create_order_service(
+            product_id=2,
+            quantity=1,
+            idempotency_key=f"ai-service-test-{uuid.uuid4()}",
+            db=db
+        )
 
-    print("Order service test successful!")
-    print("Order ID:", order.id)
-    print("Product ID:", order.product_id)
-    print("Quantity:", order.quantity)
-    print("Total:", order.total_amount)
-    print("Status:", order.status)
+        order = result["order"]
 
-finally:
-    db.close()
+        assert result["duplicate"] is False
+        assert order.product_id == 2
+        assert order.quantity == 1
+        assert order.total_amount == 799
+        assert order.status == "PENDING"
+
+    finally:
+        db.close()
